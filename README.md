@@ -13,7 +13,7 @@ go get github.com/mergestat/timediff
 
 ```golang
 import (
-  "github.com/mergestat/timediff"
+    "github.com/mergestat/timediff"
 )
 
 ```
