@@ -1,3 +1,3 @@
-module github.com/patrickdevivo/timediff
+module github.com/mergestat/timediff
 
 go 1.17
