@@ -134,3 +134,15 @@ func TestTimeDiff(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestWithStartTime(t *testing.T) {
+	start := time.Date(2022, time.January, 22, 12, 0, 0, 0, time.Now().Local().Location())
+	timeToDiff := time.Date(2022, time.January, 22, 10, 0, 0, 0, time.Now().Local().Location())
+
+	want := "2 hours ago"
+	got := timediff.TimeDiff(timeToDiff, timediff.WithStartTime(start))
+
+	if got != want {
+		t.Fatalf("expected: %q, got %q", want, got)
+	}
+}
