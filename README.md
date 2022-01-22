@@ -6,6 +6,23 @@
 `timediff` is a Go package for printing human readable, relative time differences.
 Output is based on [ranges defined in the Day.js](https://day.js.org/docs/en/display/from-now) JavaScript library, and can be customized if needed.
 
+```golang
+str1 := timediff.TimeDiff(time.Now().Add(-10 * time.Second))
+fmt.Println(str1) // a few seconds ago
+
+str2 := timediff.TimeDiff(time.Now().Add(-3 * time.Minute))
+fmt.Println(str2) // 3 minutes ago
+
+str3 := timediff.TimeDiff(time.Now().Add(-23 * time.Hour))
+fmt.Println(str3) // a day ago
+
+str4 := timediff.TimeDiff(time.Now().Add(23 * time.Hour))
+fmt.Println(str4) // in a day
+
+str5 := timediff.TimeDiff(time.Now().Add(10 * time.Hour))
+fmt.Println(str5) // in 10 hours
+```
+
 Here are examples of durations and their corresponding string outputs (taken from test output), using default options:
 
 ```
