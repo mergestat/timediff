@@ -9,7 +9,7 @@ import (
 	"text/tabwriter"
 	"time"
 
-	"github.com/patrickdevivo/timediff"
+	"github.com/mergestat/timediff"
 )
 
 var fixtures = map[string]string{
