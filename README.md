@@ -7,6 +7,17 @@
 `timediff` is a Go package for printing human readable, relative time differences.
 Output is based on [ranges defined in the Day.js](https://day.js.org/docs/en/display/from-now) JavaScript library, and can be customized if needed.
 
+```bash
+go get github.com/mergestat/timediff
+```
+
+```golang
+import (
+  "github.com/mergestat/timediff"
+)
+
+```
+
 ```golang
 str1 := timediff.TimeDiff(time.Now().Add(-10 * time.Second))
 fmt.Println(str1) // a few seconds ago
