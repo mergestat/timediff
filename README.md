@@ -1,4 +1,7 @@
-## timediff
+[![Go Report Card](https://goreportcard.com/badge/github.com/mergestat/timediff)](https://goreportcard.com/report/github.com/mergestat/timediff)
+[![Go Reference](https://pkg.go.dev/badge/github.com/mergestat/timediff.svg)](https://pkg.go.dev/github.com/mergestat/timediff)
+
+# timediff
 
 `timediff` is a Go package for printing human readable, relative time differences.
 Output is based on [ranges defined in the Day.js](https://day.js.org/docs/en/display/from-now) JavaScript library, and can be customized if needed.
