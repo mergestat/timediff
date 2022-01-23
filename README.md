@@ -6,6 +6,7 @@
 
 `timediff` is a Go package for printing human readable, relative time differences.
 Output is based on [ranges defined in the Day.js](https://day.js.org/docs/en/display/from-now) JavaScript library, and can be customized if needed.
+It's currently used by the [`mergestat` command-line interface](https://github.com/mergestat/mergestat).
 
 ```bash
 go get github.com/mergestat/timediff
