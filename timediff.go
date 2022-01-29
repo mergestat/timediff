@@ -1,25 +1,20 @@
 package timediff
 
 import (
-	"fmt"
-	"math"
+	"github.com/mergestat/timediff/locale"
 	"sort"
 	"time"
 )
 
-// TimeDiffOption is an otion used to customize a call to TimeDiff
+// TimeDiffOption is an option used to customize a call to TimeDiff
 type TimeDiffOption func(*timeDiffOptions)
-
-// RangeFormatters is a collection of associations between a min/max duration
-// and a function for formatting an output string
-type RangeFormatters map[time.Duration]func(d time.Duration) string
 
 type timeDiffOptions struct {
 	// Start is the time to calculate the time from.
 	Start time.Time
 
-	// TimeDiffRangeFormatters is the collection of duration <> formatters to use
-	TimeDiffRangeFormatters RangeFormatters
+	// Locale is the locale string used by TimeDiff function.
+	Locale locale.Locale
 }
 
 // WithStartTime changes the start time from which time diff calculations are made.
@@ -30,48 +25,28 @@ func WithStartTime(t time.Time) TimeDiffOption {
 	}
 }
 
-// DefaultTimeDiffRangeFormatters are the time ranges and their corresponding string formatters.
-var DefaultTimeDiffRangeFormatters = RangeFormatters{
-	-1 << 63:                    func(d time.Duration) string { return fmt.Sprintf("in %.0f years", math.Ceil(-d.Hours()/(24.0*30*12))) },
-	-17 * (24 * time.Hour) * 30: func(_ time.Duration) string { return "in a year" },
-	-10 * (24 * time.Hour) * 30: func(d time.Duration) string { return fmt.Sprintf("in %.0f months", math.Ceil(-d.Hours()/(24.0*30))) },
-	-45 * (24 * time.Hour):      func(d time.Duration) string { return "in a month" },
-	-25 * (24 * time.Hour):      func(d time.Duration) string { return fmt.Sprintf("in %.0f days", math.Ceil(-d.Hours()/24.0)) },
-	-35 * time.Hour:             func(_ time.Duration) string { return "in a day" },
-	-21 * time.Hour:             func(d time.Duration) string { return fmt.Sprintf("in %.0f hours", math.Ceil(-d.Hours())) },
-	-89 * time.Minute:           func(_ time.Duration) string { return "in an hour" },
-	-44 * time.Minute:           func(d time.Duration) string { return fmt.Sprintf("in %.0f minutes", math.Ceil(-d.Minutes())) },
-	-89 * time.Second:           func(_ time.Duration) string { return "in a minute" },
-	-44 * time.Second:           func(_ time.Duration) string { return "in a few seconds" },
-
-	44 * time.Second:           func(_ time.Duration) string { return "a few seconds ago" },
-	89 * time.Second:           func(_ time.Duration) string { return "a minute ago" },
-	44 * time.Minute:           func(d time.Duration) string { return fmt.Sprintf("%.0f minutes ago", math.Ceil(d.Minutes())) },
-	89 * time.Minute:           func(_ time.Duration) string { return "an hour ago" },
-	21 * time.Hour:             func(d time.Duration) string { return fmt.Sprintf("%.0f hours ago", math.Ceil(d.Hours())) },
-	35 * time.Hour:             func(_ time.Duration) string { return "a day ago" },
-	25 * (24 * time.Hour):      func(d time.Duration) string { return fmt.Sprintf("%.0f days ago", math.Ceil(d.Hours()/24.0)) },
-	45 * (24 * time.Hour):      func(d time.Duration) string { return "a month ago" },
-	10 * (24 * time.Hour) * 30: func(d time.Duration) string { return fmt.Sprintf("%.0f months ago", math.Ceil(d.Hours()/(24.0*30))) },
-	17 * (24 * time.Hour) * 30: func(_ time.Duration) string { return "a year ago" },
-	1<<63 - 1:                  func(d time.Duration) string { return fmt.Sprintf("%.0f years ago", math.Ceil(d.Hours()/(24.0*30*12))) },
+// WithLocale changes the locale used for the diff operation
+func WithLocale(locale locale.Locale) TimeDiffOption {
+	return func(opt *timeDiffOptions) {
+		opt.Locale = locale
+	}
 }
 
 // TimeDiff prints a human-readable string representing the difference between two `time.Time`s.
 // By default, the "start" time is time.Now(), but can be overridden with the WithStartTime(t time.Time) option.
 func TimeDiff(t time.Time, options ...TimeDiffOption) string {
 	// set some default options
-	opt := &timeDiffOptions{
-		Start:                   time.Now(),
-		TimeDiffRangeFormatters: DefaultTimeDiffRangeFormatters,
-	}
+	opt := &timeDiffOptions{Start: time.Now(), Locale: "en-US"}
 
 	// apply the option functions
 	for _, optionFn := range options {
 		optionFn(opt)
 	}
 
-	rf := opt.TimeDiffRangeFormatters
+	var rf locale.Formatters
+	if rf = locale.Lookup(opt.Locale); rf == nil {
+		return "" // TODO: find out a way to return an error in case locale is not found
+	}
 
 	// break up the range into slices of keys (durations) and values (formatters)
 	durations := make([]time.Duration, 0, len(rf))

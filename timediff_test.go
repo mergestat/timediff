@@ -129,7 +129,7 @@ func TestTimeDiff(t *testing.T) {
 		}
 
 		timeToDiff := now.Add(dur)
-		got := timediff.TimeDiff(timeToDiff)
+		got := timediff.TimeDiff(timeToDiff, timediff.WithLocale("en-US"))
 
 		if got != want {
 			t.Fatalf("expected: %q, got: %q for duration: %q (%q)", want, got, durStr, dur)
