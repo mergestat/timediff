@@ -1,4 +1,3 @@
-
 package locale
 
 import (
