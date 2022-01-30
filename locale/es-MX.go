@@ -33,6 +33,6 @@ var spanishMexico = Formatters{
 }
 
 func init() {
-	Register("en", spanishMexico) // also register it as the default spanish locale
+	Register("es", spanishMexico) // also register it as the default spanish locale
 	Register("es-MX", spanishMexico)
 }
