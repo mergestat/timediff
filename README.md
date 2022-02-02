@@ -1,6 +1,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/mergestat/timediff.svg)](https://pkg.go.dev/github.com/mergestat/timediff)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mergestat/timediff)](https://goreportcard.com/report/github.com/mergestat/timediff)
 [![CI](https://github.com/mergestat/timediff/actions/workflows/ci.yaml/badge.svg)](https://github.com/mergestat/timediff/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/mergestat/timediff/branch/main/graph/badge.svg?token=UHKDZPWYPO)](https://codecov.io/gh/mergestat/timediff)
 
 # timediff
 
