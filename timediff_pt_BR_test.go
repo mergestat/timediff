@@ -142,3 +142,40 @@ func TestTimeDiffPtBR(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestWithStartTimePtBR(t *testing.T) {
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 8, ' ', tabwriter.TabIndent)
+
+	start := time.Date(2022, time.January, 22, 12, 0, 0, 0, time.Now().Local().Location())
+
+	// past time
+	timeToDiff := time.Date(2022, time.January, 22, 10, 0, 0, 0, time.Now().Local().Location())
+	want := "2 horas atrás"
+	got := timediff.TimeDiff(timeToDiff, timediff.WithLocale("pt-BR"), timediff.WithStartTime(start))
+
+	if got != want {
+		t.Fatalf("expected: %q, got %q", want, got)
+	}
+	fmt.Fprintln(w, strings.Join([]string{"-2h", got}, "\t"))
+
+	now := time.Now()
+	want = "3 minutos atrás"
+	got = timediff.TimeDiff(now.Add(-3*time.Minute), timediff.WithLocale("pt-BR"), timediff.WithStartTime(now))
+	if got != want {
+		t.Fatalf("expected: %q, got: %q", want, got)
+	}
+	fmt.Fprintln(w, strings.Join([]string{"-3m", got}, "\t"))
+
+	// future time
+	timeToDiff = time.Date(2022, time.January, 22, 14, 0, 0, 0, time.Now().Local().Location())
+	want = "em 2 horas"
+	got = timediff.TimeDiff(timeToDiff, timediff.WithLocale("pt-BR"), timediff.WithStartTime(start))
+
+	if got != want {
+		t.Fatalf("expected: %q, got %q", want, got)
+	}
+	fmt.Fprintln(w, strings.Join([]string{"2h", got}, "\t"))
+	if err := w.Flush(); err != nil {
+		t.Fatal(err)
+	}
+}
