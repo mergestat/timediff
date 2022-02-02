@@ -37,6 +37,11 @@ str5 := timediff.TimeDiff(time.Now().Add(10 * time.Hour))
 fmt.Println(str5) // in 10 hours
 ```
 
+```golang
+str := timediff.TimeDiff(time.Now().Add(-3 * time.Minute), timediff.WithLocale("pt-BR"))
+fmt.Println(str) // em 3 minutos
+```
+
 Here are examples of durations and their corresponding string outputs (taken from test output), using default options:
 
 ```
