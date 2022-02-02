@@ -2,6 +2,7 @@ package timediff_test
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"sort"
 	"strings"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	"github.com/mergestat/timediff"
+	"github.com/mergestat/timediff/locale"
 )
 
 var fixtures = map[string]string{
@@ -152,5 +154,29 @@ func TestWithStartTime(t *testing.T) {
 
 	if got != want {
 		t.Fatalf("expected: %q, got %q", want, got)
+	}
+}
+
+func TestWithCustomFormatters(t *testing.T) {
+	var custom = locale.Formatters{
+		21 * time.Hour: func(d time.Duration) string { return fmt.Sprintf("Custom message: %.0f hours", math.Ceil(d.Hours())) },
+	}
+
+	{
+		want := "Custom message: 2 hours"
+		got := timediff.TimeDiff(time.Now().Add(-2*time.Hour), timediff.WithCustomFormatters(custom), timediff.WithLocale("en-US"))
+
+		if got != want {
+			t.Fatalf("expected: %q, got %q", want, got)
+		}
+	}
+
+	{
+		want := "Custom message: 100 hours"
+		got := timediff.TimeDiff(time.Now().Add(-100*time.Hour), timediff.WithCustomFormatters(custom), timediff.WithLocale("en-US"))
+
+		if got != want {
+			t.Fatalf("expected: %q, got %q", want, got)
+		}
 	}
 }
