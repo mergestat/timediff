@@ -82,7 +82,7 @@ func TimeDiff(t time.Time, options ...TimeDiffOption) string {
 		formatters[i] = rf[d]
 	}
 
-	// take the between the supplied time and the start time
+	// take the diff between the supplied time and the start time
 	diff := opt.Start.Sub(t).Round(time.Second)
 
 	for i := range durations {
@@ -100,5 +100,5 @@ func TimeDiff(t time.Time, options ...TimeDiffOption) string {
 		}
 	}
 
-	return formatters[len(formatters)](diff)
+	return formatters[len(formatters)-1](diff)
 }

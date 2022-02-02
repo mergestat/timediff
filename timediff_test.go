@@ -171,4 +171,12 @@ func TestWithCustomFormatters(t *testing.T) {
 		}
 	}
 
+	{
+		want := "Custom message: 100 hours"
+		got := timediff.TimeDiff(time.Now().Add(-100*time.Hour), timediff.WithCustomFormatters(custom), timediff.WithLocale("en-US"))
+
+		if got != want {
+			t.Fatalf("expected: %q, got %q", want, got)
+		}
+	}
 }
