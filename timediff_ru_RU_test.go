@@ -2,17 +2,12 @@ package timediff_test
 
 import (
 	"fmt"
-	"os"
-	"sort"
-	"strings"
 	"testing"
-	"text/tabwriter"
-	"time"
 
 	"github.com/mergestat/timediff"
 )
 
-var fixturesRU = map[string]string{
+var fixtures_ru_RU = map[string]string{
 	"-10s":                            "несколько секунд назад",
 	"-44s":                            "несколько секунд назад",
 	"-45s":                            "минуту назад",
@@ -95,52 +90,5 @@ var fixturesRU = map[string]string{
 }
 
 func TestTimeDiffRU(t *testing.T) {
-	now := time.Now()
-
-	durations := make([]string, 0, len(fixturesRU))
-	wants := make([]string, len(fixturesRU))
-
-	for d := range fixturesRU {
-		durations = append(durations, d)
-	}
-
-	sort.SliceStable(durations, func(i, j int) bool {
-		pi, err := time.ParseDuration(durations[i])
-		if err != nil {
-			t.Fatal(err)
-		}
-		pj, err := time.ParseDuration(durations[j])
-		if err != nil {
-			t.Fatal(err)
-		}
-		return pi < pj
-	})
-
-	// populate the slice of formatters, corresponding to their sorted durations
-	for i, d := range durations {
-		wants[i] = fixturesRU[d]
-	}
-
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', tabwriter.TabIndent)
-
-	for d, durStr := range durations {
-		want := wants[d]
-		dur, err := time.ParseDuration(durStr)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		timeToDiff := now.Add(dur)
-		got := timediff.TimeDiff(timeToDiff, timediff.WithLocale("ru-RU"))
-
-		if got != want {
-			t.Fatalf("expected: %q, got: %q for duration: %q (%q)", want, got, durStr, dur)
-		}
-
-		fmt.Fprintln(w, strings.Join([]string{durStr, got}, "\t"))
-	}
-
-	if err := w.Flush(); err != nil {
-		t.Fatal(err)
-	}
+	execFixtures(t, fixtures_ru_RU, timediff.WithLocale("ru-RU"))
 }

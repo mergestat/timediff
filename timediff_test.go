@@ -94,13 +94,16 @@ var fixtures = map[string]string{
 	fmt.Sprintf("%dh", 100*24*30*12): "in 100 years",
 }
 
-func TestTimeDiff(t *testing.T) {
+// execFixtures is a helper function for executing tests against fixtures
+func execFixtures(t *testing.T, f map[string]string, opts ...timediff.TimeDiffOption) {
+	t.Helper()
+
 	now := time.Now()
 
-	durations := make([]string, 0, len(fixtures))
-	wants := make([]string, len(fixtures))
+	durations := make([]string, 0, len(f))
+	wants := make([]string, len(f))
 
-	for d := range fixtures {
+	for d := range f {
 		durations = append(durations, d)
 	}
 
@@ -118,7 +121,7 @@ func TestTimeDiff(t *testing.T) {
 
 	// populate the slice of formatters, corresponding to their sorted durations
 	for i, d := range durations {
-		wants[i] = fixtures[d]
+		wants[i] = f[d]
 	}
 
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', tabwriter.TabIndent)
@@ -131,7 +134,7 @@ func TestTimeDiff(t *testing.T) {
 		}
 
 		timeToDiff := now.Add(dur)
-		got := timediff.TimeDiff(timeToDiff, timediff.WithLocale("en-US"))
+		got := timediff.TimeDiff(timeToDiff, opts...)
 
 		if got != want {
 			t.Fatalf("expected: %q, got: %q for duration: %q (%q)", want, got, durStr, dur)
@@ -143,6 +146,10 @@ func TestTimeDiff(t *testing.T) {
 	if err := w.Flush(); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestTimeDiff(t *testing.T) {
+	execFixtures(t, fixtures, timediff.WithLocale("en-US"))
 }
 
 func TestWithStartTime(t *testing.T) {

@@ -2,17 +2,12 @@ package timediff_test
 
 import (
 	"fmt"
-	"os"
-	"sort"
-	"strings"
 	"testing"
-	"text/tabwriter"
-	"time"
 
 	"github.com/mergestat/timediff"
 )
 
-var fixtures_ptBR = map[string]string{
+var fixtures_pt_BR = map[string]string{
 	"-10s":                            "há poucos segundos",
 	"-44s":                            "há poucos segundos",
 	"-45s":                            "há um minuto",
@@ -93,89 +88,5 @@ var fixtures_ptBR = map[string]string{
 }
 
 func TestTimeDiffPtBR(t *testing.T) {
-	now := time.Now()
-
-	durations := make([]string, 0, len(fixtures_ptBR))
-	wants := make([]string, len(fixtures_ptBR))
-
-	for d := range fixtures_ptBR {
-		durations = append(durations, d)
-	}
-
-	sort.SliceStable(durations, func(i, j int) bool {
-		pi, err := time.ParseDuration(durations[i])
-		if err != nil {
-			t.Fatal(err)
-		}
-		pj, err := time.ParseDuration(durations[j])
-		if err != nil {
-			t.Fatal(err)
-		}
-		return pi < pj
-	})
-
-	// populate the slice of formatters, corresponding to their sorted durations
-	for i, d := range durations {
-		wants[i] = fixtures_ptBR[d]
-	}
-
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', tabwriter.TabIndent)
-
-	for d, durStr := range durations {
-		want := wants[d]
-		dur, err := time.ParseDuration(durStr)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		timeToDiff := now.Add(dur)
-		got := timediff.TimeDiff(timeToDiff, timediff.WithLocale("pt-BR"))
-
-		if got != want {
-			t.Fatalf("expected: %q, got: %q for duration: %q (%q)", want, got, durStr, dur)
-		}
-
-		fmt.Fprintln(w, strings.Join([]string{durStr, got}, "\t"))
-	}
-
-	if err := w.Flush(); err != nil {
-		t.Fatal(err)
-	}
-}
-
-func TestWithStartTimePtBR(t *testing.T) {
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 8, ' ', tabwriter.TabIndent)
-
-	start := time.Date(2022, time.January, 22, 12, 0, 0, 0, time.Now().Local().Location())
-
-	// past time
-	timeToDiff := time.Date(2022, time.January, 22, 10, 0, 0, 0, time.Now().Local().Location())
-	want := "2 horas atrás"
-	got := timediff.TimeDiff(timeToDiff, timediff.WithLocale("pt-BR"), timediff.WithStartTime(start))
-
-	if got != want {
-		t.Fatalf("expected: %q, got %q", want, got)
-	}
-	fmt.Fprintln(w, strings.Join([]string{"-2h", got}, "\t"))
-
-	now := time.Now()
-	want = "3 minutos atrás"
-	got = timediff.TimeDiff(now.Add(-3*time.Minute), timediff.WithLocale("pt-BR"), timediff.WithStartTime(now))
-	if got != want {
-		t.Fatalf("expected: %q, got: %q", want, got)
-	}
-	fmt.Fprintln(w, strings.Join([]string{"-3m", got}, "\t"))
-
-	// future time
-	timeToDiff = time.Date(2022, time.January, 22, 14, 0, 0, 0, time.Now().Local().Location())
-	want = "em 2 horas"
-	got = timediff.TimeDiff(timeToDiff, timediff.WithLocale("pt-BR"), timediff.WithStartTime(start))
-
-	if got != want {
-		t.Fatalf("expected: %q, got %q", want, got)
-	}
-	fmt.Fprintln(w, strings.Join([]string{"2h", got}, "\t"))
-	if err := w.Flush(); err != nil {
-		t.Fatal(err)
-	}
+	execFixtures(t, fixtures_pt_BR, timediff.WithLocale("pt-BR"))
 }
