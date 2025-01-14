@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var chineseUnitedStates = Formatters{
+var chineseChina = Formatters{
 	-1 << 63:                    func(d time.Duration) string { return fmt.Sprintf("%.0f 年后", math.Ceil(-d.Hours()/(24.0*30*12))) },
 	-17 * (24 * time.Hour) * 30: func(_ time.Duration) string { return "1年后" },
 	-10 * (24 * time.Hour) * 30: func(d time.Duration) string { return fmt.Sprintf("%.0f 个月后", math.Ceil(-d.Hours()/(24.0*30))) },
@@ -33,5 +33,6 @@ var chineseUnitedStates = Formatters{
 }
 
 func init() {
-	Register("zh-CN", chineseUnitedStates)
+	Register("zh", chineseChina) // also register it as the default Chinese locale
+	Register("zh-CN", chineseChina)
 }
