@@ -8,16 +8,18 @@ import (
 
 func arabicCount(value float64, singular, dual, few, many string) string {
 	n := int(math.Ceil(value))
+	if n < 0 {
+		n = -n
+	}
 
-	switch n {
-	case 1:
+	switch {
+	case n == 1:
 		return singular
-	case 2:
+	case n == 2:
 		return dual
+	case n%100 >= 3 && n%100 <= 10:
+		return fmt.Sprintf("%d %s", n, few)
 	default:
-		if n >= 3 && n <= 10 {
-			return fmt.Sprintf("%d %s", n, few)
-		}
 		return fmt.Sprintf("%d %s", n, many)
 	}
 }

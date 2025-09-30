@@ -48,6 +48,7 @@ var fixtures_ar_SA = map[string]string{
 	fmt.Sprintf("-%dh", 17*24*30+1):   "منذ سنتين",
 	fmt.Sprintf("-%dh", 24*24*30):     "منذ سنتين",
 	fmt.Sprintf("-%dh", 20*24*30*12):  "منذ 20 سنة",
+	fmt.Sprintf("-%dh", 103*24*30*12): "منذ 103 سنوات",
 	fmt.Sprintf("-%dh", 100*24*30*12): "منذ 100 سنة",
 
 	"10s":                            "بعد ثوانٍ قليلة",
@@ -86,6 +87,7 @@ var fixtures_ar_SA = map[string]string{
 	fmt.Sprintf("%dh", 12*24*30):     "بعد سنة",
 	fmt.Sprintf("%dh", 24*24*30):     "بعد سنتين",
 	fmt.Sprintf("%dh", 20*24*30*12):  "بعد 20 سنة",
+	fmt.Sprintf("%dh", 103*24*30*12): "بعد 103 سنوات",
 	fmt.Sprintf("%dh", 100*24*30*12): "بعد 100 سنة",
 }
 
